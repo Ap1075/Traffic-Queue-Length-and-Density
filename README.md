@@ -34,3 +34,5 @@ The mask is overlayed on the video provided as input and features are continuosl
 ```
 python3 q_detections.py -p path/to/VideoOrStream -s /save_output_here.avi
 ```
+
+<img src="sample_images/q_lenn.png" width="700">
