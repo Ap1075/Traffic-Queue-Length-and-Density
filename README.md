@@ -12,7 +12,7 @@ pip install -r requirements.txt
 
 ## Unsupervised CNN segmentation. 
 
-The CNN model iteratively refines the Felzenszwalb image segmentation that relies on the similarity between neighbouring pixels. The iterative refinement process is a joint optimization problem where an unknown number of (region) labels is first predicted which is then used to optimize the CNN-generated feature vectors and the classification algorithm. The next step is to refine the number of labels. This process is repeated until a minimum number of labels is reached or by setting a hard limit on the number of iterations. In our experiments, we used 300 iterations to achieve the segmentation.
+The CNN model iteratively refines the Felzenszwalb image segmentation that relies on the similarity between neighbouring pixels. The iterative refinement process is a joint optimization problem where an unknown number of (region) labels is first predicted which is then used to optimize the CNN-generated feature vectors and the classification algorithm. The next step is to refine the number of labels. This process is repeated until a minimum number of labels is reached or by setting a hard limit on the number of iterations. In our experiments, we used 200 iterations to achieve the segmentation.
 To run the Unsupervised CNN,
 
 <img src="sample_images/road.png" width="400"> <img src="sample_images/segmented_road.png" width="400">
