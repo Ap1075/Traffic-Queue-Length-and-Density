@@ -2,7 +2,7 @@
 
 # Queue Length Estimation.
 
-The approach is based on road segmentation using an unsupervised convolutional neural network and detecting features (Shi-Tomasi corner detection) on the segmented road. The queue length is then estimated by computing the real world distance between last detected feature and the first feature detected on the segmented road.
+The approach is based on road segmentation using an unsupervised convolutional neural network and detecting features (Shi-Tomasi corner detection) on the segmented road. The detected corners are then segregated into static and dynamic corners. The queue length is estimated by computing the real world distance between the last and the first static feature detected on the segmented road.
 
 Use this command to install all the necessary packages (python3).
 
