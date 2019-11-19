@@ -15,6 +15,8 @@ import torch.nn.init
 from PIL import Image
 
 use_cuda = torch.cuda.is_available()
+if use_cuda:
+    print("Running on GPU.")
 
 parser = argparse.ArgumentParser(description='PyTorch Unsupervised Segmentation')
 parser.add_argument('--nChannel', metavar='N', default=100, type=int, 
@@ -113,7 +115,7 @@ data = Variable(data)
 
 # slic
 # labels = segmentation.slic(im, compactness=args.compactness, n_segments=args.num_superpixels) # slic seg
-labels = segmentation.felzenszwalb(im, scale=1, sigma=0.5, min_size=50)
+labels = segmentation.felzenszwalb(im, scale=2, sigma=0.25, min_size=40)
 labels = labels.reshape(im.shape[0]*im.shape[1])
 u_labels = np.unique(labels)
 l_inds = []
@@ -150,8 +152,11 @@ for batch_idx in range(args.maxIter):
         im_target_rgb = im_target_rgb.reshape( im.shape ).astype( np.uint8 )
         frr = cv2.cvtColor(im_target_rgb, cv2.COLOR_BGR2HSV)
         if batch_idx >= args.maxIter-10:
+            print("number of labels: ", nLabels)
             result = input('Input Label to show and save.\n')
             print("showing label: ",result)
+            if str(result) == "done":
+                break
             try:
                 if int(result) >= nLabels or int(result) == 0:
                     prev_res = result
@@ -180,9 +185,9 @@ for batch_idx in range(args.maxIter):
 
         res = cv2.bitwise_and(im_target_rgb, im_target_rgb, mask=mask)
 
-        cv2.imshow( "output", im_target_rgb )
         cv2.imshow( "masked_out", (res) )
         cv2.imshow("mask", mask)
+        cv2.imshow( "output", im_target_rgb )
 
         cv2.waitKey(1)
 

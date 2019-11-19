@@ -24,6 +24,7 @@ class q_lenner():
 		self.medd=0
 		# self.video_path = video_path
 		self.mask_img = mask_img
+		self.mask_img = cv2.medianBlur(self.mask_img, 51)
 		#input and dst arrays are for homography estimation. Measured values in img and world coordinates.
 		self.input_array = input_array
 		self.dst_array = dst_array
@@ -39,7 +40,7 @@ class q_lenner():
 		return distance
 
 	def visualize(self, frame, stat, dyn):
-		"""Visualizes detected features and queue length measurements."""
+		"""Visualizes detected features and queue length measurements. Enabled through run method argument."""
 
 		font                   = cv2.FONT_HERSHEY_SIMPLEX
 		bottomLeftCornerOfText = (1000,850)
@@ -75,29 +76,31 @@ class q_lenner():
 	
 	def run(self, frame, visualize=False):
 		"""Runs the queue length estimation code for each frame."""
-
-		frame = cv2.imread(frame)
-		# _, frame = cap.read()
-		self.frame_no += 1	
-		mask = cv2.medianBlur(self.mask_img, 51)#####################################################
-		if self.frame_no == 2:
-			M, _ = cv2.findHomography(np.array(self.input_array), np.array(self.dst_array),cv2.LMEDS,5)
-			print("H matrix:\n", M)
-			# scale = 2.5 																					# experimental param
-			M *= self.scale
+		try:
+			frame = cv2.imread(frame)
+			# _, frame = cap.read()
+			self.frame_no += 1	
+			if self.frame_no == 2:
+				M, _ = cv2.findHomography(np.array(self.input_array), np.array(self.dst_array),cv2.LMEDS,5)
+				print("H matrix:\n", M)
+				# scale = 2.5 																					# experimental param
+				M *= self.scale
+		except Exception as ex:
+			print("Problem while reading input frame.\n")
+			print(ex)
 
 		try:
 			gr = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-			greyed = cv2.bitwise_and(frame, frame, mask = mask)
+			greyed = cv2.bitwise_and(frame, frame, mask = self.mask_img)
 			greyed = cv2.cvtColor(greyed, cv2.COLOR_BGR2GRAY)
-			# cv2.imshow("inspect this", greyed)
 			corns = cv2.goodFeaturesToTrack(greyed, 100, 0.5, 10)
 			corns = np.int0(corns)
 
 			# get neighbourhood around corners, required to distinguish between static and dynamic corners.
 			corn_neigh= self.corns_neighbourhood(corns)
-		except:
-			print("Problem detected with frame.")
+		except Exception as ex:
+			print("Problem detected with input frame.\n")
+			print(ex)
 
 		if self.old_frame is not None:
 			self.old_frame_no += 1
