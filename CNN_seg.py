@@ -115,7 +115,7 @@ data = Variable(data)
 
 # slic
 # labels = segmentation.slic(im, compactness=args.compactness, n_segments=args.num_superpixels) # slic seg
-labels = segmentation.felzenszwalb(im, scale=2, sigma=0.25, min_size=40)
+labels = segmentation.felzenszwalb(im, scale=2.5, sigma=0.25, min_size=500)
 labels = labels.reshape(im.shape[0]*im.shape[1])
 u_labels = np.unique(labels)
 l_inds = []
@@ -225,12 +225,15 @@ if not args.visualize:
     im_target_rgb = im_target_rgb.reshape( im.shape ).astype( np.uint8 )
 # im_target_rgb = cv2.resize(im_target_rgb, (orig_shape[1],orig_shape[0]))
 # im_target_rgb = image_resize(im_target_rgb, height=orig_shape[0]-1, width=orig_shape[1])
-im_target_rgb = cv2.resize(im_target_rgb, (1920,1080), interpolation=cv2.INTER_AREA)
+
+# im_target_rgb = cv2.resize(im_target_rgb, (1920,1080), interpolation=cv2.INTER_AREA)
+im_target_rgb = cv2.resize(im_target_rgb, (orig_shape[1],orig_shape[0]), interpolation=cv2.INTER_AREA)
 im_target_rgb = cv2.medianBlur(im_target_rgb, 7)
 cv2.imwrite( "./out/out.png", im_target_rgb )
 # cv2.imwrite( args.output, im_target_rgb )
 print( "./outs_{0}_{1}_{2}.png".format(args.compactness, args.num_superpixels, args.nConv))
-mask = cv2.resize(mask, (1920,1080), interpolation=cv2.INTER_AREA)
-mask = cv2.medianBlur(mask, 25)
+# mask = cv2.resize(mask, (1920,1080), interpolation=cv2.INTER_AREA)
+mask = cv2.resize(mask, (orig_shape[1],orig_shape[0]), interpolation=cv2.INTER_AREA)
+mask = cv2.medianBlur(mask, 11)
 cv2.imwrite(args.output, mask)
 # cv2.imwrite( "./out/new_fb_.png".format(args.compactness, args.num_superpixels, args.nConv), im_target_rgb )
