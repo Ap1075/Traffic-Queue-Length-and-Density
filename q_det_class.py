@@ -28,8 +28,8 @@ class q_lenner():
         # self.video_path = video_path
         self.mask_img = cv2.medianBlur(mask_img, 51)
         # input and dst arrays are for homography estimation. Measured values in img and world coordinates.
-        self.input_array = input_array
-        self.dst_array = dst_array
+        self.input_array = input_arr
+        self.dst_array = dst_arr
         self.scale = scale
         self.homat = (cv2.findHomography(np.array(self.input_array),
                       np.array(self.dst_array), cv2.LMEDS, 5))*self.scale
@@ -50,7 +50,7 @@ class q_lenner():
 
         font = cv2.FONT_HERSHEY_SIMPLEX
         bottomLeftCornerOfText = (1000, 850)
-        bottomRightCornerOfText = (1000, 870)
+        # bottomRightCornerOfText = (1000, 870)
         fontScale = 1
         fontColor = (255, 255, 255)
         lineType = 2
@@ -84,10 +84,11 @@ class q_lenner():
             corn_neigh.append([y-1, y+1, x-1, x+1])
         return corn_neigh
 
-    def run(self, frame, visualize=False):
+    def run(self, sframe, visualize=False):
         """Runs the queue length estimation code for each frame."""
+
         try:
-            frame = cv2.imread(frame)
+            frame = sframe.get_image()
             self.frame_no += 1  
         except Exception as ex:
             print("Problem while reading input frame.\n")
@@ -108,7 +109,8 @@ class q_lenner():
 
         if self.old_frame is not None:
             self.old_frame_no += 1
-            max_val = []             # list containing max val for each window around a corner for consecutive frames.
+            # list containing max val for each window around a corner for consecutive frames.
+            max_val = []
             stat = []
             dyn = []
             for i,win in enumerate(corn_neigh):
@@ -149,7 +151,7 @@ class q_lenner():
                     self.stat_greater_count = 0
                     self.dyn_greater_count = 0
                 # print(stat_greater_count)
-            if visualize==True:
+            if visualize:
                 self.visualize(frame, stat, dyn)
             
         self.old_frame = gr
