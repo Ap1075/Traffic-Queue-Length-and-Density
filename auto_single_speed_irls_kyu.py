@@ -10,12 +10,17 @@ from scipy.optimize import least_squares, leastsq
 from auto_track import analytics_rbc
 import hourglass_single #.example.hourglass_single #import hourglass
 import csv
+import json
 
 weights = np.ones((48))
 
 def compute_homography(image_keypoints, world_keypoints):
     "Takes image points as a list of lists. 24 lists for 24 keypoints. Use 6 different auto positions (from separate frames of same view) and the origin3d point to compute homography by establishing 6 point correspondences."
 
+
+def array_dump(filename, img_coords, real_coords):
+	with open(filename, "w") as arraydump:
+		json.dump([img_coords,real_coords], arraydump)
 
 def reproject_error(pose, points, imagepoints): #pose (rvecs, tvecs), world_points, image_points
 	
@@ -373,7 +378,7 @@ while True:
 										img_pix_kps.append(transformed_points)
 										# world coordinates of origin for the same auto.
 										world_pix_ori.append(position)
-									if len(world_pix_ori) >= 6:
+									if len(world_pix_ori) == 8:
 										#get appropriate keypoints as per view, transform origin 3d coords to that keypoint and pick x and y locations to create homography.
 										# pointers is the list of indices of points detected, denoting which keypoint was detected.
 										print("Keypoint chosen for homography:", pointers[0])
@@ -382,8 +387,13 @@ while True:
 										for i in range(len(world_pix_ori)):
 											req_world_coords_kp[i] = [sum(x) for x in zip(world_pix_ori[i][:2], pts[pointers[0]][:2])]
 
+										array_dump("arrays.txt", req_img_coords_kp, req_world_coords_kp)
+
+
+
 										# TODO: compute homography
-										compute_homography(req_img_coords_kp, req_world_coords_kp)
+
+										# compute_homography(req_img_coords_kp, req_world_coords_kp)
 
 
 									#writer.writerow(zip([str(position[0]), str(position[1]), str(position[2])], transformed_points))
