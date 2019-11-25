@@ -6,6 +6,9 @@ from scipy import optimize
 from operator import itemgetter
 import math
 
+
+"""Get input and dst arrays from auto_single_speed_irls_kyu to compute homography matrix."""
+
 # RBC gate measurements.
 inpt_array = [[1421, 895], [1454, 988], [1149, 618], [1116, 592], [772, 785], [
     838, 735]]  # gratings 1 and 2, sedan1 , ace , sedan 2 rear and front

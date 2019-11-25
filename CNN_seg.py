@@ -16,7 +16,7 @@ from PIL import Image
 
 use_cuda = torch.cuda.is_available()
 if use_cuda:
-    print("Running on GPU.")
+    print("Running segmentation on GPU.")
 
 parser = argparse.ArgumentParser(description='PyTorch Unsupervised Segmentation')
 parser.add_argument('--nChannel', metavar='N', default=100, type=int, 
@@ -115,7 +115,7 @@ data = Variable(data)
 
 # slic
 # labels = segmentation.slic(im, compactness=args.compactness, n_segments=args.num_superpixels) # slic seg
-labels = segmentation.felzenszwalb(im, scale=2.5, sigma=0.25, min_size=500)
+labels = segmentation.felzenszwalb(im, scale=2.5, sigma=0.25, min_size=150)
 labels = labels.reshape(im.shape[0]*im.shape[1])
 u_labels = np.unique(labels)
 l_inds = []
