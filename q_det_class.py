@@ -1,8 +1,5 @@
 import cv2
-import matplotlib.pyplot as plt
 import numpy as np
-import argparse
-from scipy import optimize
 from operator import itemgetter
 import math
 
@@ -154,6 +151,9 @@ class q_lenner():
                     self.stat_greater_count = 0
                     self.dyn_greater_count = 0
                 # print(stat_greater_count)
+            if (len(self.old_q) > 10 or (max(self.old_q) - min(self.old_q) > 10)):
+                self.old_q = []
+
             if visualize:
                 self.visualize(frame, stat, dyn)
             
