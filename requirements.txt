@@ -11,7 +11,7 @@ pathlib2==2.3.3
 pbr==5.1.3
 pexpect==4.7.0
 pickleshare==0.7.5
-Pillow==5.4.1
+Pillow==8.1.1
 plac==0.9.6
 ply==3.11
 preshed==2.0.1
